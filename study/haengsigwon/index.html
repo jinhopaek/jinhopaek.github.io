@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>행시권 주차별 정리 아카이브</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f3ee;
+        --surface: #fffdf8;
+        --surface-2: #efece3;
+        --ink: #221e19;
+        --ink-soft: #45403a;
+        --muted: #7a7365;
+        --line: #ddd6c7;
+        --accent: #7c2d26;
+        --accent-ink: #7c2d26;
+        --accent-soft: #f3e3df;
+        --ok: #256b4c;
+        --ok-soft: #ddeee4;
+        --no: #9c2b2b;
+        --no-soft: #f6e0dc;
+        --warn: #8a5a12;
+        --warn-soft: #f4ead2;
+        --shadow: 0 1px 2px rgba(40, 32, 20, 0.06), 0 8px 24px rgba(40, 32, 20, 0.05);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #151619;
+          --surface: #1e2025;
+          --surface-2: #26282e;
+          --ink: #ede8dd;
+          --ink-soft: #c9c3b6;
+          --muted: #98917f;
+          --line: #35373e;
+          --accent: #e59a8b;
+          --accent-ink: #eda294;
+          --accent-soft: #3a2622;
+          --ok: #7fc7a3;
+          --ok-soft: #22392e;
+          --no: #ef9a90;
+          --no-soft: #3d2624;
+          --warn: #e3b96a;
+          --warn-soft: #3a3120;
+          --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", sans-serif;
+        font-size: 16px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 0 18px 72px; }
+
+      /* ---------- 상단 ---------- */
+      header.top { padding: 30px 0 6px; }
+      .subject-line {
+        display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+      }
+      .subject-line h1 {
+        font-family: "Noto Serif KR", serif;
+        font-size: 26px; font-weight: 900; margin: 0; letter-spacing: -0.01em;
+      }
+      .subject-line .prof { color: var(--muted); font-size: 14px; }
+      .archive-note { color: var(--muted); font-size: 13.5px; margin: 6px 0 0; }
+
+      /* ---------- 차시 선택 ---------- */
+      nav.weeks {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--bg);
+        padding: 14px 0 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      nav.weeks .label { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 8px; }
+      .week-list { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+      .week-list::-webkit-scrollbar { display: none; }
+      .week-btn {
+        flex: 0 0 auto;
+        font: inherit; font-size: 14px; font-weight: 500;
+        padding: 8px 14px; border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--surface); color: var(--ink-soft);
+        cursor: pointer; white-space: nowrap;
+      }
+      .week-btn[aria-selected="true"] {
+        background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 700;
+      }
+      .week-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+      /* ---------- 차시 헤더 ---------- */
+      .session-head { padding: 26px 0 4px; }
+      .session-head .date {
+        font-family: "Noto Serif KR", serif;
+        font-size: 23px; font-weight: 700; margin: 0;
+      }
+      .session-head .topic { font-size: 17px; font-weight: 700; color: var(--accent-ink); margin: 4px 0 0; }
+      .session-head .meta { color: var(--muted); font-size: 13.5px; margin: 8px 0 0; }
+
+      /* ---------- 목차 ---------- */
+      .toc {
+        display: flex; flex-wrap: wrap; gap: 6px;
+        margin: 18px 0 6px; padding: 14px 16px;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+      }
+      .toc a {
+        font-size: 13px; color: var(--ink-soft); text-decoration: none;
+        padding: 4px 10px; border-radius: 999px; background: var(--surface-2);
+      }
+      .toc a:hover { color: var(--accent-ink); }
+
+      /* ---------- 섹션 ---------- */
+      section { padding-top: 34px; scroll-margin-top: 118px; }
+      section h2 {
+        font-family: "Noto Serif KR", serif;
+        font-size: 20px; font-weight: 700; margin: 0 0 4px;
+        display: flex; align-items: baseline; gap: 10px;
+      }
+      section h2 .num {
+        font-family: "Noto Sans KR", sans-serif;
+        font-size: 12px; font-weight: 700; color: var(--bg);
+        background: var(--accent); border-radius: 6px;
+        padding: 2px 8px; position: relative; top: -2px; flex: 0 0 auto;
+      }
+      section h3 { font-size: 16.5px; font-weight: 700; margin: 22px 0 6px; }
+      section p { margin: 8px 0; color: var(--ink-soft); }
+      section p strong, section li strong { color: var(--ink); }
+      ul.tight { margin: 8px 0; padding-left: 20px; color: var(--ink-soft); }
+      ul.tight li { margin: 5px 0; }
+      .lead { color: var(--ink); font-weight: 500; }
+
+      /* 강조 박스 */
+      .callout {
+        margin: 14px 0; padding: 14px 16px;
+        background: var(--accent-soft); border-radius: 12px;
+        font-size: 15px; color: var(--ink);
+      }
+      .callout .tag { font-size: 12px; font-weight: 700; color: var(--accent-ink); letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+      .callout p { color: var(--ink); margin: 4px 0; }
+
+      /* 공식 박스 */
+      .formula {
+        margin: 14px 0; padding: 16px;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+        box-shadow: var(--shadow); text-align: center;
+        font-family: "Noto Serif KR", serif; font-size: 17px; font-weight: 700;
+      }
+      .formula .sub { font-family: "Noto Sans KR", sans-serif; font-size: 13.5px; font-weight: 400; color: var(--muted); display: block; margin-top: 6px; }
+
+      /* 카드 그리드 */
+      .cards { display: grid; gap: 12px; margin: 14px 0; }
+      @media (min-width: 640px) { .cards.c3 { grid-template-columns: repeat(3, 1fr); } .cards.c2 { grid-template-columns: repeat(2, 1fr); } }
+      .card {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+        padding: 16px; box-shadow: var(--shadow);
+      }
+      .card .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+      .card .card-title { font-weight: 700; font-size: 15.5px; }
+      .card p { font-size: 14.5px; margin: 5px 0; }
+      .card ul { margin: 6px 0; padding-left: 18px; font-size: 14.5px; color: var(--ink-soft); }
+      .card ul li { margin: 4px 0; }
+
+      .badge {
+        font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap;
+      }
+      .badge.ok { background: var(--ok-soft); color: var(--ok); }
+      .badge.no { background: var(--no-soft); color: var(--no); }
+      .badge.warn { background: var(--warn-soft); color: var(--warn); }
+      .badge.plain { background: var(--surface-2); color: var(--ink-soft); }
+      .letter-badge {
+        font-family: "Noto Serif KR", serif; font-weight: 900; font-size: 15px;
+        width: 28px; height: 28px; border-radius: 8px; flex: 0 0 auto;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: var(--accent); color: #fff;
+      }
+      @media (prefers-color-scheme: dark) { .letter-badge { color: #1c1210; } }
+
+      /* 비교 표 */
+      .table-scroll { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+      table { border-collapse: collapse; width: 100%; min-width: 480px; font-size: 14.5px; }
+      th, td { padding: 11px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+      thead th { background: var(--surface-2); font-weight: 700; font-size: 13.5px; }
+      tbody tr:last-child td { border-bottom: none; }
+      td { color: var(--ink-soft); }
+      td strong { color: var(--ink); }
+      th:first-child, td:first-child { font-weight: 700; color: var(--ink); white-space: nowrap; }
+
+      /* 학설 목록 */
+      .theories { display: grid; gap: 10px; margin: 14px 0; }
+      .theory {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+        padding: 15px 16px; box-shadow: var(--shadow);
+      }
+      .theory .t-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+      .theory .t-num {
+        font-family: "Noto Serif KR", serif; font-weight: 900; font-size: 17px; color: var(--accent-ink);
+      }
+      .theory .t-name { font-weight: 700; font-size: 16px; }
+      .theory p { font-size: 14.5px; margin: 6px 0 2px; }
+      .scope { margin-top: 10px; }
+      .scope .scope-label { font-size: 11.5px; color: var(--muted); margin-bottom: 4px; }
+      .scope .bar { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+      .scope .bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+
+      .flow-note { font-size: 13.5px; color: var(--muted); margin: 4px 0 0; }
+
+      /* 예고 + 하단 */
+      .next-up {
+        margin-top: 38px; padding: 15px 17px;
+        border: 1px dashed var(--line); border-radius: 12px;
+        font-size: 14.5px; color: var(--ink-soft);
+      }
+      .next-up .tag { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; display: block; margin-bottom: 3px; }
+      footer {
+        margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line);
+        color: var(--muted); font-size: 13px;
+      }
+      .hidden { display: none; }
+
+      /* 좁은 화면: 표를 가로 스크롤 대신 쌓인 카드로 */
+      @media (max-width: 640px) {
+        .table-scroll { overflow: visible; border: none; background: transparent; margin: 12px 0; }
+        .table-scroll table { min-width: 0; display: block; }
+        .table-scroll thead { display: none; }
+        .table-scroll tbody, .table-scroll tr, .table-scroll td { display: block; }
+        .table-scroll tr {
+          border: 1px solid var(--line); border-radius: 12px;
+          background: var(--surface); box-shadow: var(--shadow);
+          margin-bottom: 10px; padding: 8px 0;
+        }
+        .table-scroll td { border-bottom: none; padding: 5px 15px; }
+        .table-scroll td[data-label]::before {
+          content: attr(data-label);
+          display: block; font-size: 11.5px; font-weight: 700;
+          color: var(--muted); letter-spacing: 0.05em; margin-bottom: 1px;
+        }
+        .table-scroll td:first-child { font-size: 15.5px; padding-top: 6px; }
+      }
+      @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div class="subject-line">
+          <h1>행정과시민의권리구제</h1>
+          <span class="prof">장경원 교수 · 화 09:00–11:00</span>
+        </div>
+        <p class="archive-note">주차별 수업 정리 아카이브 — 차시를 골라 그날의 정리를 봅니다.</p>
+      </header>
+
+      <nav class="weeks" aria-label="차시 선택">
+        <div class="label">차시</div>
+        <div class="week-list" role="tablist">
+          <button class="week-btn" role="tab" aria-selected="false" data-week="w1020">2026-10-20 · 행정심판 ①</button>
+          <button class="week-btn" role="tab" aria-selected="false" data-week="w1027">2026-10-27 · 행정심판 ② + 행정소송 총론</button>
+          <button class="week-btn" role="tab" aria-selected="false" data-week="w1103">2026-11-03 · 행정소송의 종류·원고적격</button>
+          <button class="week-btn" role="tab" aria-selected="true" data-week="w1110">2026-11-10 · 소송요건 심화 — 원고적격·소의 이익·피고적격·대상적격</button>
+        </div>
+      </nav>
+
+      <main>
+        <!-- ================= 2026-10-20 ================= -->
+        <article data-panel="w1020" class="hidden">
+          <div class="session-head">
+            <p class="date">2026-10-20 수업 (8주차)</p>
+            <p class="topic">행정심판 ① — 종류 · 청구인적격 · 절차 · 사정재결</p>
+            <p class="meta">강의자료 슬라이드 (6) 앞부분 해당</p>
+          </div>
+
+          <div class="toc" aria-label="이 차시 목차">
+            <a href="#a1">행정심판의 자리</a>
+            <a href="#a2">처분의 맛보기</a>
+            <a href="#a3">행정청·행정주체</a>
+            <a href="#a4">심판의 종류</a>
+            <a href="#a5">청구인적격</a>
+            <a href="#a6">거부처분과 신청권</a>
+            <a href="#a7">절차 개관</a>
+            <a href="#a8">행심위의 직접 재결</a>
+            <a href="#a9">사정재결</a>
+          </div>
+
+          <section id="a1">
+            <h2><span class="num">1</span>행정심판의 자리</h2>
+            <p>행정쟁송의 두 축은 <strong>행정심판</strong>(행정 내부의 구제)과 <strong>행정소송</strong>(사법부의 구제)이다.</p>
+            <p>결정적 차이는 다툴 수 있는 범위다. 심판은 <strong>위법한 처분뿐 아니라 부당한 처분까지</strong> 다툴 수 있지만, 법원은 위법만 심사한다.</p>
+            <p>이날은 처분·신청권 같은 소송의 기본 개념을 심판의 틀 안에서 먼저 잡고 들어갔다 — 처분은 여기서 '맛만 보기'이고, 행정소송에서 본격적으로 다룬다.</p>
+            <div class="callout">
+              <span class="tag">교수 강조</span>
+              <p>행정심판법 조문 자체가 시험 대상이다.</p>
+            </div>
+          </section>
+
+          <section id="a2">
+            <h2><span class="num">2</span>처분의 맛보기 — 심판의 대상을 정하는 개념들</h2>
+            <div class="formula">
+              처분 = 공권력 행사
+              <span class="sub">상대방에게 묻지 않고 우월적 지위에서 일방적으로 하는 것</span>
+            </div>
+            <p>예컨대 하지도 않은 위법을 이유로 "넌 위반했으니까 취소한다"고 하는 허가취소가 처분이다. 강자가 약자에게 일방적으로 하는 것이다.</p>
+            <h3>비권력적 작용은 처분이 아니다</h3>
+            <p>반대말은 <strong>비권력적 작용</strong>이다. <strong>행정지도</strong> — 물가 상승기에 판매업자에게 가격을 올리지 말아 달라는 협조 요청 — 는 거부해도 불이익을 줄 수 없어 처분이 아니고 다툴 수도 없다.</p>
+            <p>다만 사실상 불이익이 따라오는 행정지도는 처분이 될 가능성도 있다.</p>
+          </section>
+
+          <section id="a3">
+            <h2><span class="num">3</span>행정청과 행정주체</h2>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">행정주체</span><span class="badge plain">몸통</span></div>
+                <p>행위의 법적 효과가 최종적으로 귀속되는 자 — <strong>국가·지방자치단체·공공단체</strong>.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">행정청</span><span class="badge plain">수족·손코입</span></div>
+                <p>행정주체의 의사를 결정하고 외부에 표시할 수 있는 권한을 가진 기관.</p>
+              </div>
+            </div>
+            <p>행심법 2조상 행정청은 행정에 관한 의사를 결정하여 표시하는 국가 또는 지방자치단체의 기관, 그 밖에 법령·자치법규에 따라 행정권한을 가지고 있거나 위탁을 받은 공공단체·기관·사인이다. <strong>공무수탁사인도 행심법상 행정청</strong>에 해당한다.</p>
+          </section>
+
+          <section id="a4">
+            <h2><span class="num">4</span>행정심판의 종류 3가지</h2>
+            <p>항고소송의 3유형(취소소송·무효등확인소송·부작위위법확인소송)과 나란히 놓고 비교하면 차이가 또렷하다.</p>
+            <div class="callout">
+              <span class="tag">결정적 차이</span>
+              <p>소송에는 <strong>부작위위법확인소송</strong>이 있고, 심판에는 <strong>의무이행심판</strong>이 있다.</p>
+            </div>
+            <h3>의무이행심판의 대상</h3>
+            <p>의무이행심판의 대상은 부작위뿐 아니라 <strong>거부처분도 포함</strong>된다. 거부처분은 취소심판으로도 다툴 수 있지만 의무이행심판으로도 다툴 수 있다 (사례는 9주차에서 본격적으로 다룬다).</p>
+          </section>
+
+          <section id="a5">
+            <h2><span class="num">5</span>청구인적격 — 법률상 이익</h2>
+            <p>심판에서도 청구인적격은 <strong>법률상 이익</strong>이 기준이다. 입법 실수처럼 보일 수 있으나 실수가 아니다.</p>
+            <div class="callout">
+              <span class="tag">핵심</span>
+              <p><strong>부당한 행위에 의해서도 법률상 이익은 침해될 수 있다</strong> — 심판이 소송(위법만)보다 넓게 열리는 지점이다.</p>
+            </div>
+          </section>
+
+          <section id="a6">
+            <h2><span class="num">6</span>거부처분과 신청권</h2>
+            <p class="lead">거부처분·부작위는 항상 문제를 일으킨다. 보통의 적극적 처분과 달리 당사자에게 <strong>신청권</strong>을 요구하기 때문이다.</p>
+            <h3>거부처분</h3>
+            <p>인허가 신청에 대해 안 해주겠다는 의사표시. 판례는 <strong>신청권이 있는 자</strong>에 대한 거부만 처분으로 인정한다. 신청권이 없으면 거부가 처분이 안 돼 다툴 수 없다.</p>
+            <ul class="tight">
+              <li>법률에 명확한 근거가 없어도 <strong>조리상 신청권</strong>을 넓게 인정하는 편이다.</li>
+              <li>실무에서 가장 많이 다투는 것이 "처분인지 아닌지" — 처분이 아니면 법원은 내용을 볼 필요 없이 <strong>각하</strong>한다.</li>
+            </ul>
+            <h3>부작위</h3>
+            <p>아무것도 하지 않는 상태. 역시 신청과 신청권을 전제로 하고, 일정한 기간이 지나야 성립한다 (기간 판단은 해석의 문제).</p>
+            <h3>간주거부</h3>
+            <p>"신청 후 2주 내에 처분을 하여야 한다"고 정해져 있는데 아무 처분도 안 한 경우 — 겉으로는 부작위처럼 보이지만 <strong>적극적인 거부처분으로 보고</strong> 거부처분 취소심판·취소소송으로 다퉈야 한다 (법률 규정에 의한 의제).</p>
+          </section>
+
+          <section id="a7">
+            <h2><span class="num">7</span>행정심판 절차 개관</h2>
+            <h3>제기요건 — 주체·대상·기간·방법</h3>
+            <ul class="tight">
+              <li><strong>주체</strong> — 청구인적격 있는 자 (법률상 이익 있는 자)</li>
+              <li><strong>대상</strong> — 처분 또는 부작위 (개괄주의)</li>
+              <li><strong>기간</strong> — 원칙적으로 처분이 있음을 <strong>안 날부터 90일 이내</strong>, 처분이 <strong>있은 날부터 180일 이내</strong></li>
+              <li><strong>방법</strong> — 서면으로 제기 (심판청구서: 청구인·피청구인·처분내용·청구취지·이유)</li>
+            </ul>
+            <h3>심리 원칙 ① 대심주의</h3>
+            <p>싸움을 거는 자와 걸린 자의 싸움이고, 심판위원은 제3자 입장에서 지켜본다 (처분권주의와 연결). <strong>불고불리의 원칙</strong> — 고하지 않으면 심리하지 않는다.</p>
+            <h3>재결의 범위 (제47조)</h3>
+            <ul class="tight">
+              <li>위원회는 심판청구의 대상인 처분·부작위 <strong>외의 사항은 재결하지 못한다</strong>.</li>
+              <li>대상 처분보다 <strong>청구인에게 불리한 재결을 하지 못한다</strong> (불이익변경 금지 — 심판을 제기했다가 더 불리해질 수 있다면 누가 제기하겠는가, 행심 제기 권리 보호 차원).</li>
+            </ul>
+            <h3>심리 원칙 ② 직권심리</h3>
+            <p>필요하면 당사자가 주장하지 않은 사실도 직권으로 심리할 수 있다. 대심주의와 상충하는 게 아니라 다른 층위의 원칙이다.</p>
+            <h3>제척·기피·회피 (제10조)</h3>
+            <p>위원이 법정 사유에 해당하면 그 사건의 심리·의결에서 제척되고, 결정은 위원장이 직권 또는 당사자 신청으로 한다.</p>
+            <div class="callout">
+              <span class="tag">구별할 절차적 권리들</span>
+              <p>위원에 대한 기피 신청권(10조), 구술심리 신청권(40조), 보충서면 제출권(33조), 물적증거 제출권(34조), 증거조사 신청권(36조). 제척·기피는 강제 배제 사유이지 당사자가 마음대로 위원을 빼는 제도가 아니다.</p>
+            </div>
+          </section>
+
+          <section id="a8">
+            <h2><span class="num">8</span>행심위의 직접 재결 — 행심법의 중요한 개정</h2>
+            <p>과거에는 행심위 의결을 재결청(장)이 받아 그대로 재결하는 형식이었고, 행정심판위원회와 재결청이 구분되어 있었다.</p>
+            <p>개정으로 <strong>행정심판위원회 자체가 재결청</strong>이 됐다. 다만 안건이 너무 많아 5~6개월 지체되는 경우가 허다하다.</p>
+          </section>
+
+          <section id="a9">
+            <h2><span class="num">9</span>사정재결 (제44조)</h2>
+            <div class="callout">
+              <span class="tag">제44조</span>
+              <p>"위원회는 심판청구가 이유가 있다고 인정하는 경우에도 이를 인용하는 것이 <strong>공공복리에 크게 위배된다</strong>고 인정하면 그 심판청구를 기각하는 재결을 할 수 있다. 이 경우 위원회는 재결의 주문에서 그 처분 또는 부작위가 위법하거나 부당하다는 것을 구체적으로 밝혀야 한다."</p>
+            </div>
+            <p>아주 특이한 조문이다. 억울하지만 대한민국 전체의 이익을 위해 당신 손을 들어줄 수 없다는 것 — 아주 예외적인 경우에만, 남발하면 안 되고 요건이 매우 엄격하다.</p>
+            <h3>사정판결(행소법 28조)과 비교</h3>
+            <p>행소법은 "처분등을 취소하는 것이 <strong>현저히</strong> 공공복리에 적합하지 아니하다고 인정하는 때" — <strong>'현저히'라는 말이 행심법에는 없다</strong>. 문언이 조금 다르다.</p>
+          </section>
+
+          <div class="next-up">
+            <span class="tag">다음 시간 예고</span>
+            슬라이드 (6) 뒷부분 — 요건심리·재결의 효력·고지제도를 다음 차시(9주차)에서 이어 간다.
+          </div>
+
+          <footer>메모 필기 + 행정심판법 조문 대조 정리</footer>
+        </article>
+
+        <!-- ================= 2026-10-27 ================= -->
+        <article data-panel="w1027" class="hidden">
+          <div class="session-head">
+            <p class="date">2026-10-27 수업 (9주차)</p>
+            <p class="topic">행정심판 ② + 행정소송 총론</p>
+            <p class="meta">강의자료 슬라이드 (6) 뒷부분 · (7) 해당</p>
+          </div>
+
+          <div class="toc" aria-label="이 차시 목차">
+            <a href="#n1">A · 요건심리</a>
+            <a href="#n2">A · 심판기관·특별행정심판</a>
+            <a href="#n3">A · 재결의 효력</a>
+            <a href="#n4">A · 기속력·재처분의무</a>
+            <a href="#n5">A · 직접처분·간접강제</a>
+            <a href="#n6">A · 재처분 사례</a>
+            <a href="#n7">A · 재량준칙</a>
+            <a href="#n8">A · 고지제도</a>
+            <a href="#n9">B · 의의·구별</a>
+            <a href="#n10">B · 헌법소송과 비교</a>
+            <a href="#n11">B · 기능</a>
+            <a href="#n12">B · 본질</a>
+            <a href="#n13">B · 한계</a>
+            <a href="#n14">B · 연혁·개정안</a>
+          </div>
+
+          <section id="n1">
+            <h2><span class="num">A1</span>요건심리</h2>
+            <p>심리는 순서가 있다. 먼저 <strong>요건심리</strong> — 청구인적격, 피청구인적격, 기간(있음을 안 날부터 90일; 단 하루만 지나도 영원히 다툴 수 없다).</p>
+            <p>요건 하나라도 못 갖추면 <strong>부적법 각하재결</strong>이고, 그 후에야 본안심리에 들어간다.</p>
+          </section>
+
+          <section id="n2">
+            <h2><span class="num">A2</span>행심법의 개정과 심판기관</h2>
+            <ul class="tight">
+              <li>굵직한 개정은 <strong>2008, 2010, 2017</strong>. 재결청을 없앤 결과 현재는 <strong>재결청 = 행심위</strong>다.</li>
+              <li>가장 큰 행심위: 국무총리행정심판위원회 → <strong>중앙행정심판위원회</strong>로, 예전 법제처 소속에서 지금은 <strong>국민권익위원회</strong> 소속이다.</li>
+            </ul>
+            <h3>특별행정심판 (제4조)</h3>
+            <p>사안의 전문성·특수성을 살리기 위해 특히 필요한 경우 외에는 행심법에 따른 행정심판을 갈음하는 특별 행정불복절차나 행심 절차의 특례를 다른 법률로 정할 수 없다.</p>
+            <ul class="tight">
+              <li>다른 법률에서 특별행정심판·특례를 정한 경우에도, 그 법률에서 규정하지 않은 사항은 행심법에 따른다.</li>
+              <li>특례를 신설·변경하는 법령 제정·개정 시에는 미리 중앙행심위와 협의해야 한다.</li>
+            </ul>
+            <div class="callout">
+              <span class="tag">교수 강조</span>
+              <p>행심위의 기준은 중앙행심위가 기준이 된다고 생각하면 된다. 조문 자체가 시험 대상이다.</p>
+            </div>
+          </section>
+
+          <section id="n3">
+            <h2><span class="num">A3</span>재결의 효력</h2>
+            <p>재결은 <strong>형성력·집행력·불가쟁력·불가변력</strong>을 가진다. 효과로 반복금지효·원상회복의무·재처분의무가 따른다.</p>
+            <p>피청구인(행정청)이 지면 더 다툴 방법이 없다 — 국민의 입장에서는 적은 돈과 시간으로 <strong>대법원 판결과 같은 효력</strong>을 얻는 효율적인 권리구제 수단이다.</p>
+            <div class="callout">
+              <span class="tag">인용률은 낮다 (10~20%)</span>
+              <p>행심위도 자기 판단이 돌이킬 수 없게 되므로(불가변력 — 행심위 스스로도 나중에 변경 불가) 매우 신중하게 판단하기 때문이다.</p>
+            </div>
+          </section>
+
+          <section id="n4">
+            <h2><span class="num">A4</span>재결의 기속력과 재처분의무 (제49조)</h2>
+            <p>제49조 — 심판청구를 인용하는 재결은 피청구인과 그 밖의 관계 행정청을 <strong>기속</strong>한다. 기각 재결에는 기속력이 발생하지 않는다 (예: 허가취소처분의 취소를 구한 심판에서 졌으면 행정청은 이긴 것, 가만히 있으면 된다).</p>
+            <h3>허가거부 사례 — 취소재결에도 재처분의무</h3>
+            <p>과거에는 취소심판으로 허가거부처분을 다투는 것이 의미 없다는 주장이 있었다 (취소돼도 허가가 나오는 게 아니므로). 행심법 49조 개정으로 <strong>취소재결에도 재처분의무</strong>를 규정했다.</p>
+            <ul class="tight">
+              <li>허가가 <strong>기속행위</strong>이면 재결 취지상 바로 허가를 해야 한다.</li>
+              <li>의무이행심판은 "허가를 내달라", 취소심판은 "허가거부를 취소해달라"이지만, 거부가 위법하다는 취지를 살리면 취소재결의 취지도 허가를 내주라는 것이고 49조의 재처분의무에 따라 허가를 해줘야 한다.</li>
+              <li>49조가 없었더라면 가장 유효적절한 수단은 의무이행심판뿐이었을 것 — 지금은 뭘 해도 같고, 국민에게 유리하게 됐다.</li>
+            </ul>
+          </section>
+
+          <section id="n5">
+            <h2><span class="num">A5</span>직접처분과 간접강제 (제50조·제50조의2)</h2>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">제50조 · 위원회의 직접 처분</span></div>
+                <p>피청구인이 제49조제3항에도 불구하고 처분을 하지 않으면, 당사자 신청으로 기간을 정해 서면으로 시정을 명하고, 그 기간에 이행하지 않으면 <strong>위원회가 직접 처분</strong>을 할 수 있다 (의무이행심판의 경우 — 행정 내부에서 말을 듣지 않는 '항명'의 꼴).</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">제50조의2 · 위원회의 간접강제</span></div>
+                <p>피청구인이 기속력 있는 재결에 따른 처분을 하지 않으면, 청구인 신청으로 기간을 정하고, 그 기간 내 이행하지 않으면 지연기간에 따라 일정한 배상을 명하거나 즉시 배상을 명할 수 있다 (손해배상으로 심리적으로 강제 — "빨리빨리 해라").</p>
+              </div>
+            </div>
+            <p>왜 이런 장치가 있나 — 상급기관이 뭐라 해도 지자체장급이 말을 잘 듣지 않는 현실 때문이다.</p>
+            <div class="callout">
+              <span class="tag">정보공개 사례</span>
+              <p>정보공개거부처분 취소재결이 나와도, 정보를 가진 처분청이 말을 안 들으면 행심위가 직접 정보를 공개할 수는 없다 (정보는 피청구인이 가진다). 성질상 직접처분이 불가능한 경우 <strong>간접강제로 우회</strong>한다.</p>
+            </div>
+          </section>
+
+          <section id="n6">
+            <h2><span class="num">A6</span>사례2 — 재처분과 처분기준시</h2>
+            <p>갑이 허가신청을 거부당해 (거부처분 있은 날부터 90일 이내에) 의무이행심판을 제기, 인용재결(의무이행재결)을 받았다. 행정청은 재결 취지에 따라 재처분을 해야 한다.</p>
+            <p>그런데 재결~재처분 사이에 허가 기준이 법률 개정으로 아주 엄격해져, 지금은 엄격한 기준을 못 충족하는 경우 — 행정청은 허가를 내줘야 하나?</p>
+            <div class="formula">
+              재처분도 처분이다 → 기준법령은 신청시가 아닌 처분시
+              <span class="sub">이례적인 특별한 사정(개정까지 일부러 질질 끈 경우 등)이 없는 한 허가를 내주면 안 된다</span>
+            </div>
+            <p>근거는 <strong>행정기본법 제14조제2항</strong> — "당사자의 신청에 따른 처분은 법령등에 특별한 규정이 있거나 처분 당시의 법령등을 적용하기 곤란한 특별한 사정이 있는 경우를 제외하고는 처분 당시의 법령등에 따른다." 판례의 입장을 행기법이 확인한 것이다.</p>
+            <p>같은 딱한 경우에는 법적 효력을 다투기보다 다른 구제수단(돈으로 해결)을 마련할 수밖에 없다는 것이 교수의 정리다.</p>
+          </section>
+
+          <section id="n7">
+            <h2><span class="num">A7</span>재량준칙과 부당한 처분</h2>
+            <h3>택시기사 사례</h3>
+            <p>평생 모범적으로 일한 택시기사가 아픈 아이를 병원에 데려가다 술 먹은 상태에서 교통경찰에 걸려 면허취소처분 기준에 해당하게 된 경우. 법령 기준에 따라 내린 처분이라 <strong>위법한 처분이라고 보기는 어렵다</strong>. 그러나 기사 입장에선 너무 가혹하고, 면허취소는 온 가족의 생계(개인택시운수사업)를 끊는다.</p>
+            <p>이때 행정심판으로 다투면 위법한 행정작용뿐 아니라 <strong>부당한 행정작용도</strong> 다툴 수 있어 행심위는 취소시켜 줄 여지가 있다.</p>
+            <ul class="tight">
+              <li><strong>재량준칙과 법규명령의 근본적 차이는 대외적 구속력</strong>이다.</li>
+              <li>재량권 내에서 행사한 것에 대해 법원은 재량권의 일탈·남용(당부당이 아닌 위법의 문제)이 있지 않은 한 뭐라 하면 안 된다. 기준에 맞게 처분한 것이긴 하나 가혹한 이 경우, 행심위에서는 취소시켜 줄 수 있다.</li>
+              <li>다만 문제는 쉽지 않다 — 위법과 부당을 쉽게 구분하기 어렵고(사안에 따라 부당할 수도 아닐 수도), 예전에는 너무 가혹하다며 인용해 주는 경우도 있었다.</li>
+            </ul>
+          </section>
+
+          <section id="n8">
+            <h2><span class="num">A8</span>심판청구의 고지제도 (제58조)</h2>
+            <p>제58조(행정심판의 고지): 행정청이 처분을 할 때는 처분의 상대방에게 ① 해당 처분에 대하여 행정심판을 청구할 수 있는지, ② 행정심판을 청구하는 경우의 심판청구 절차 및 심판청구 기간을 알려야 한다. 처분청이 자기 처분에 자신이 있어야 하고, 상대방의 권리구제를 위한 것이다.</p>
+            <h3>고지의 성질</h3>
+            <ul class="tight">
+              <li><strong>비권력적 사실행위</strong> — 특별한 법적인 효과가 있지는 않다.</li>
+              <li>과거에는 훈시규정(해도 그만 안 해도 그만)으로 봤으나 지금은 <strong>효력규정설</strong> — 고지가 없으면 중대한 하자로 이를 이유로 또 다툴 수 있다 (절차위반으로 처분 취소를 구할 수 있음).</li>
+              <li>부처분(본처분)의 효력과는 영향이 없다 — 절차에 관한 것이다.</li>
+            </ul>
+            <h3>누구에게 고지하나</h3>
+            <ul class="tight">
+              <li><strong>직권에 의한 고지</strong> — 불이익한 처분(부과가 딸려 있는 처분, 신청을 거부하는 처분 등)이 대상.</li>
+              <li><strong>이해관계인(제3자)</strong> — 직접 상대방은 직권으로 고지, 제3자 이해관계인은 신청하면 알려줘야 한다. 지체 없이 = 행심 제기하는데 지장이 없을 정도의 합리적인 기간.</li>
+            </ul>
+            <h3>불고지·오고지의 효과</h3>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr><th>구분</th><th>경유절차</th><th>청구기간</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>불고지</td>
+                    <td data-label="경유절차">행정 내부에서 정당한 기관으로 <strong>이송</strong></td>
+                    <td data-label="청구기간"><strong>처분이 있은 날부터 180일</strong>이 청구기간이 된다</td>
+                  </tr>
+                  <tr>
+                    <td>오고지</td>
+                    <td data-label="경유절차">불고지와 동일 — 정당한 기관으로 <strong>이송</strong></td>
+                    <td data-label="청구기간">법상 안 날부터 90일이나, 오고지한 경우 <strong>오고지한 고지기간대로</strong> (청구인에게 유리하게)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout">
+              <span class="tag">교수 마무리</span>
+              <p>"소송과는 다르게 심판에서만 문제되는 사항을 다 본 것. 행심법 한번 꼼꼼하게 보세요."</p>
+            </div>
+          </section>
+
+          <section id="n9">
+            <h2><span class="num">B1</span>행정소송의 의의와 구별</h2>
+            <div class="formula">
+              법원이 행정법상의 법률관계에 관한 분쟁에 대하여, 당사자의 소의 제기에 의하여, 이를 심리·판단하는 정식재판 절차
+            </div>
+            <ul class="tight">
+              <li>행정심판(준사법절차, 법원이 아님 — 행정이 사건을 다툼)과 다르고, 민사소송(개인과 개인 사이의 사법관계 분쟁)·헌법소송과 양상이 다르다.</li>
+              <li>행정소송은 사법부의 <strong>정식쟁송</strong>, 즉 사법작용 — 일반법원의 관할 (<strong>사법국가형</strong>). 반대말은 행정국가형.</li>
+              <li>우리나라는 대륙법계를 취하여 공사법을 구별한다 (영미법계와의 차이). 문제 되는 분쟁이 공법관계냐 사법관계냐에 따라 다투는 방법(소송의 방식)이 달라진다 — 사법관계의 법원리(사적자치·소유권절대·과실책임)와 공법관계의 법원리(평등·비례·부당결부금지 등)는 다르다.</li>
+            </ul>
+            <h3>행정소송과 민사소송의 구별 학설</h3>
+            <div class="theories">
+              <div class="theory">
+                <div class="t-head"><span class="t-num">1</span><span class="t-name">주체설</span></div>
+                <p>구주체설(적어도 일방이 행정주체) / 신주체설(귀속설 — 행정주체를 위해서만 권리·의무가 귀속되면 공법). 신주체설이면 조세 원천징수처럼 사법관계처럼 보이는 것도 해결 가능하다.</p>
+                <p>문제점: 적용 법규가 없을 때, 공사법이 혼재할 때.</p>
+              </div>
+              <div class="theory">
+                <div class="t-head"><span class="t-num">2</span><span class="t-name">실력설(복종설)</span></div>
+                <p>지배·복종관계면 공법관계, 대등관계면 사법관계.</p>
+                <p>문제점: 공법상 계약, 친권·후견제도.</p>
+              </div>
+              <div class="theory">
+                <div class="t-head"><span class="t-num">3</span><span class="t-name">이익설</span></div>
+                <p>공익목적이면 공법, 사익목적이면 사법.</p>
+                <p>문제점: 다수의 행정법규가 공익 실현 목적이라 모든 행정법규를 공익으로 볼 수밖에 없는지.</p>
+              </div>
+              <div class="theory">
+                <div class="t-head"><span class="t-num">4</span><span class="t-name">복수기준설</span></div>
+                <p>주체설을 기준으로 이익설·실력설 등을 종합 고려하고, 법 개정 시 취지까지 본다. 우리 판례는 어느 한 견해를 취한다고 보기 어렵다.</p>
+              </div>
+            </div>
+            <h3>판례 — 행정재산의 사용·수익 허가</h3>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">대판 1964.9.30. 64누102</span><span class="badge no">과거 판례</span></div>
+                <p>행정재산의 사용·수익 허가는 개인과 대등한 위치에서 사권설정의 법률행위를 하는 것 (임대업과 별반 다르지 않음 — 민사소송으로 다툼).</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">대판 1998.2.27. 97누1105</span><span class="badge ok">현재</span></div>
+                <p>구 국유재산법의 잡종재산대부규정 준용 등으로 양 당사자가 대등한 지위라 보기 어렵고 행정이 우월적 지위라고 봐야 해서, 지금은 <strong>처분으로 봐야 하고 행정소송으로 다퉈야</strong> 한다 (관리청이 공권력을 가진 우월적 지위에서 행하는 행정처분).</p>
+              </div>
+            </div>
+            <p>현재 국유재산법은 잡종재산대부규정 준용을 없애고 행정이 우월적 지위에서 행하는 규정을 넣어 개정됐다.</p>
+          </section>
+
+          <section id="n10">
+            <h2><span class="num">B2</span>행정소송과 헌법소송</h2>
+            <ul class="tight">
+              <li><strong>공통점</strong> — 모두 <strong>공법상 소송</strong>: 직권주의 요청, 권리보호이익의 필요, 행정통제적(국가권력통제) 기능. 억울하게 허가취소를 당해 그 취소를 구하는 행정소송에서 이긴 경우, 같은 상황에서 행정이 전의 위법한 행위를 똑같이 하지 않게 되는 행정통제 효과가 따라온다.</li>
+              <li><strong>차이점</strong> — 판단주체(법원/헌법재판소). 취소판결은 당해 사건에 관해 관계인을 구속하나, 위헌결정은 법원·국가·지방자치단체를 구속한다. 헌법소송사항은 헌법에서 열거한다 (헌법 111조).</li>
+            </ul>
+          </section>
+
+          <section id="n11">
+            <h2><span class="num">B3</span>행정소송의 기능 (행소법 1조)</h2>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">① 권리구제기능</span><span class="badge plain">관련 사익의 보호</span></div>
+                <p>행소법 12조(원고적격 "처분등의 취소를 구할 법률상 이익이 있는 자")·35조·36조.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">② 행정통제기능</span><span class="badge plain">객관적 행정법질서의 보호</span></div>
+                <p>적법한 행정의 보장, 행정권 발동의 사후 시정, 법원에 의한 행정통제. 당사자 처분권주의가 제한되고 직권주의가 강하다 (≠민사소송).</p>
+              </div>
+            </div>
+            <div class="callout">
+              <span class="tag">교수 강조 — 논쟁</span>
+              <p>"그것이 다가 아니다 — 2020년부터 새롭게 이야기하게 됨." 과거에는 당연히 (갑의 권리구제를 위한) 주관소송이었으나 최근에는 <strong>행정통제기능이 우선</strong>이라는 논의가 커졌고 모든 판이 바뀐다.</p>
+              <p>극단적 예: 허가취소를 하면 안 되는데 억울하게 취소당한 갑이 다투지 않고 있을 때, 지나가던 을이 다투겠다는 경우 — 취소소송의 목적이 갑의 권리구제에 있다면 법원은 을에게 "니가 뭔데 다투세요"라고 하지만, 목적이 행정통제기능에 있다고 하면 정의로운 을이 다툴 수 있게 해야 한다. 극단적 주장은 소수고, 대체로는 둘 다 있다 — 중간의 어딘가를 만나야 한다.</p>
+            </div>
+            <p>행소법 개정안과 연결된다 — 대법원안·법무부안 내용이 아주 획기적이라 개정되면 지금과 판이 달라질 것. 지금의 원고적격은 아주 좁지만 확 늘리고 소송 종류도 쫙 늘리는 방향인데, 그 이유는 행정소송의 기능은 <strong>행정통제기능이 메인</strong>이라는 문제의식이다.</p>
+          </section>
+
+          <section id="n12">
+            <h2><span class="num">B4</span>행정소송의 본질 — 행정국가형 vs 사법국가형</h2>
+            <p>입법정책의 문제, 입법자들의 선택이다.</p>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">행정국가형</span><span class="badge plain">사법소극주의</span></div>
+                <p>사법부가 개입을 덜 하고 행정이 처리한다. 대표적으로 프랑스의 콩세유데타(국참사원 — 엄밀히는 사법부가 아니라 행정권 내에 있지만 행정소송의 최종 권한을 가짐), 과거 독일.</p>
+                <p>이유: 권력분립을 (기능 분립이 아니라) 행정의 사법으로부터의 탈피로 해석, 행정의 자율성 보장을 더 높은 가치로 둠, 프랑스는 행정부의 권한·사회적 지위가 큼, 전문기술적 행정사건은 법관보다 행정전문가가 적합하다는 판단. 개인의 권리구제를 중시하게 되면서 독일은 사법국가형으로 돌아섰다.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">사법국가형</span><span class="badge plain">사법적극주의</span></div>
+                <p>우리나라, 영미의 rule of law 전통. 권력분립을 <strong>기능의 분립</strong>으로 해석 — 일체의 법적 분쟁 해결을 사법권에 귀속시켜 국민의 기본권 보장에 기여한다.</p>
+                <p>법치주의를 표방하는 선진국들은 대체로 사법국가형을 취한다. 근거: 헌법 101조·102조 (민·형사·행정 재판권은 사법권에 귀속 — 통상법원이 행정사건을 재판).</p>
+              </div>
+            </div>
+            <p><strong>행정법원</strong>은 1998년 독립된 행정법원이 만들어졌다 (처음에는 서초동 가건물, 지금은 양재동). 행정법원은 <strong>1심 법원</strong>이고 일반법원이다 (행소법 9조 1항).</p>
+          </section>
+
+          <section id="n13">
+            <h2><span class="num">B5</span>행정소송의 한계</h2>
+            <h3>① 사법 본질상의 한계</h3>
+            <p>우리법상 개괄주의를 채택하므로 한계 설정이 필요하다. 헌법 27조 1항(재판을 받을 권리) — 법원조직법 2조 1항 "<strong>법률상 쟁송</strong>"에서 한계가 설정된다: 법원은 법률상 쟁송이 아니면 할 수 없다.</p>
+            <ul class="tight">
+              <li><strong>법률상 쟁송의 의미</strong> — 당사자 사이의 <strong>구체적 권리·의무에 관한 다툼</strong>으로 <strong>법령의 적용에 의해 해결될 수 있는</strong> 분쟁. 추상적 법령의 해석을 다투는 것이 아니고, 반사적 이익을 다투는 경우도 안 된다. 지금 현재 문제가 되는 사건이 있어야 한다.</li>
+              <li><strong>일반추상적인 규범은 안 되지만</strong> 예외적으로 처분성이 인정되는 경우 가능 (구체적 규범통제 방식 — 대상편에서 나중에 봄). 독일은 <strong>추상적 규범통제</strong>를 인정하지만, 우리나라는 <strong>구체적 규범통제 방식</strong>이다.</li>
+              <li>민중소송·기관소송은 법률상 쟁송이 아니나 행소법에서 정했기 때문에 법률상 쟁송에 포함된다.</li>
+              <li>법률의 적용으로 해결이 가능해야 — <strong>학술·예술의 문제</strong>는 안 된다.</li>
+              <li><strong>재량행위</strong>는 원래 관여할 수 없다 — 다만 행소법 27조(재량처분의 취소)에 따라 당부당이 아니라 <strong>일탈·남용이 있는 위법한 경우에만</strong> 다툴 수 있다.</li>
+              <li><strong>특별권력관계</strong> — 과거엔 권리 제한이 쉽다고 봤지만 더 이상 법치주의의 예외로 보지 않고, 오늘날에는 <strong>특별행정법관계(특별신분관계)</strong>로 본다. 교도소 재소자들도 기본권을 제한하는 구체적 사안에 대해 법률의 근거를 마련한다.</li>
+            </ul>
+            <h3>② 권력분립상의 한계</h3>
+            <ul class="tight">
+              <li><strong>통치행위</strong> — 고도의 정치성을 띠는 국가행위 (사례: 국군 이라크 파병, 남북정상회담 — 그러나 남북정상회담 준비 중 대북송금행위는 적법여부 판단 가능, 계엄선포). 인정 범위는 축소되는 추세이고, 헌재는 통치행위를 긍정하되 사법심사 대상으로 본다.</li>
+              <li><strong>의무이행소송이 없다</strong>는 문제 — 인정하게 되면 사법부가 행정행위를 하게 되는 것. 권력분립 원칙상 사법부를 행정의 상급기관으로 볼 수 없고 행정의 (1차적) 판단권을 인정해야 한다. <strong>우리 법원의 입장도 부정설</strong> (대판 1989.5.23. 88누8135: 행정청으로 하여금 일정한 처분을 하도록 명하는 이행판결을 구하는 소송은 허용되지 아니한다). 다만 <strong>개정안에서는 대법원안·법무부안 양측 다 의무이행소송 도입을 인정</strong> — 개정되면 인정될 것.</li>
+              <li><strong>적극적 형성판결의 인정 문제 (행소법 4조 1호의 '변경')</strong> — 원래 처분을 대체해 새로운 처분으로 변경하는 것은 안 된다는 것이 이견 없이 다수설. 행정청의 1차적 판단권을 존중하고 행정부의 독립성을 보장하자는 취지로, <strong>'변경'은 소극적 변경으로서의 일부취소로 해석해야</strong> 한다.</li>
+              <li><strong>예방적 금지(부작위) 소송</strong> — 행정이 내가 싫어하는 처분을 할 것이 뻔하고 아직 안 했지만 확실한 경우, 법원에 미리 못 하게 해달라는 소송. 우리 구제제도는 일이 터진 이후 뒷수습을 하는 <strong>사후구제제도</strong>라 판례상 불인정. 독일에서는 인정하고 있다. 가능성은 조금 낮지만 행소법이 개정되면 도입될 가능성이 높다.</li>
+            </ul>
+          </section>
+
+          <section id="n14">
+            <h2><span class="num">B6</span>행정소송법제의 연혁·특색·문제점</h2>
+            <h3>연혁</h3>
+            <ul class="tight">
+              <li>1948년 제헌헌법 81조에 근거해 <strong>1951년 제정</strong> (14개 조문, 민소법·법원조직법 준용).</li>
+              <li><strong>1984년 12월 15일 새로이 행정소송법 제정</strong> (1985년 10월 시행, 5장 46개조). 발전된 내용: 소송 종류의 체계적 분류(부작위위법확인소송 인정), 원고적격 명문화, 제3자의 소송참가, 제소기간 연장, 행정심판전치주의와 예외의 구체화, 간접강제 도입, 행정심판기록제출명령 도입.</li>
+              <li><strong>1994년 중요 개정</strong> — 행정심판 임의주의 채택(1998년 3월 시행), 행정법원(지방법원급) 설치, <strong>3심제로 돌아섬</strong> (판례번호 구·누·두), 제소기간 변경 60·180·1년 → <strong>90일</strong>.</li>
+            </ul>
+            <h3>여전히 남은 문제점</h3>
+            <ul class="tight">
+              <li>① 의무이행소송·적극적 형성판결 불인정 (효과적 권리보호 △)</li>
+              <li>② 원고의 행정심판자료 열람·복사신청권 없음 (원고의 정보권 △)</li>
+              <li>③ 가처분제도 불인정 (신속한 권리보호 △)</li>
+            </ul>
+            <h3>개정안의 배경</h3>
+            <p>이래서 행소법 개정안을 마련했다. 대법원 개정안은 너무 혁명적이고 획기적인, 판을 뒤엎는 내용이다. 대법원이 법률안을 만들었다는 것 자체가 충격 — 원래 행정소송법은 싸움의 당사자인 행정(법무부)이 만들었는데, 행정소송은 국민이 행정을 상대로 싸우는 것이라 싸움의 룰을 행정이 만들었다는 근본적 문제의식이 있다. 싸움의 중재자인 객관적 지위의 사법부(대법원)에서 안을 만들어낸 배경이다. 판을 뒤엎는 개정안인데 벌써 20년째다.</p>
+            <ul class="tight">
+              <li><strong>집행정지의 한계</strong> — 행정심판은 임시처분(행심법 제31조)을 두고 있으나 행정소송은 <strong>집행정지만</strong> 있을 뿐이고, 그마저 잘 안 해준다 — 집행부정지가 원칙이기 때문 (권한 있는 기관에 의해 취소·철회되지 않는 이상 유효한 것으로 통용되는 힘 = 공정력).</li>
+              <li><strong>기존 학자들의 비판 축 ① 원고적격 확대</strong> — 판례·학설의 보호규범이론은 안정된 개념인데, 개정안은 남소 가능성과 권력분립의 문제가 있다.</li>
+              <li><strong>기존 학자들의 비판 축 ② 대상적격 확대</strong> — 용어상 소송법과 실체법의 불일치(강학상 행정행위 ≠ 법규명령·사실행위 포괄), 취소소송에서 위법한 법규명령·사실행위는 취소가 안 돼 위법확인소송으로 가야 하는 문제, '한지붕 세 가족' 이론, 개정안이 법규명령도 의무이행소송의 대상으로 삼는 것은 행정행위보다 광범위한 입법재량이 부여된 법규명령에 의무이행을 인정하는 것이라 기존 행정법 체계 혼란 우려.</li>
+            </ul>
+          </section>
+
+          <div class="next-up">
+            <span class="tag">다음 시간 예고</span>
+            "행정소송법개정시안의 문제점 — 다음시간에 합시다" (11/3 수업 도입의 개정안 논쟁으로 이어진다.)
+          </div>
+
+          <footer>강의자료 슬라이드 (7) + 메모 필기 대조 정리</footer>
+        </article>
+
+        <!-- ================= 2026-11-03 ================= -->
+        <article data-panel="w1103" class="hidden">
+          <div class="session-head">
+            <p class="date">2026-11-03 수업</p>
+            <p class="topic">행정소송의 종류 · 소송요건 · 원고적격</p>
+            <p class="meta">강의자료 슬라이드 (8) 「행정소송의 종류와 소송요건, 원고적격」 해당</p>
+          </div>
+
+          <div class="toc" aria-label="이 차시 목차">
+            <a href="#s1">개정안 논쟁</a>
+            <a href="#s2">보호규범이론 복습</a>
+            <a href="#s3">소송의 종류</a>
+            <a href="#s4">소송요건 개관</a>
+            <a href="#s5">12조의 두 '법률상 이익'</a>
+            <a href="#s6">전형 3사례</a>
+            <a href="#s7">직접 상대방 이론</a>
+            <a href="#s8">학설 4가지</a>
+            <a href="#s9">판례 유형</a>
+          </div>
+
+          <section id="s1">
+            <h2><span class="num">1</span>도입 — 행정소송법 개정안 논쟁</h2>
+            <p>개정안은 강학상 행정행위 아래에 <strong>법규명령·사실행위</strong> 등 서로 이질적인 것들을 <strong>'처분' 개념으로 한 지붕</strong>에 넣으려 하고, 원고적격의 '법률상 이익' 요건도 넓히려 한다.</p>
+            <p>이에 대한 반대 논거는 세 가지다.</p>
+            <ul class="tight">
+              <li><strong>용어 문제</strong> — 실정법과 강학상 개념(행정행위/법규명령/사실행위)이 어긋난다.</li>
+              <li><strong>법리 구성의 무리</strong> — 취소소송으로 위법한 법규명령까지 다투려면 법리 구성이 무리하다. 그건 확인소송의 영역이다.</li>
+              <li><strong>체계 교체의 비용</strong> — 잘 운용돼 온 체계를 바꾸면 교과서·판례 전체의 '판을 갈아야' 한다.</li>
+            </ul>
+            <div class="callout">
+              <span class="tag">교수 입장</span>
+              <p>다툼의 대상과 원고적격을 넓혀 국민에게 유리하게 하자는 취지는 알지만, 현행 보호규범이론 체계로도 운용이 돼 왔다.</p>
+            </div>
+          </section>
+
+          <section id="s2">
+            <h2><span class="num">2</span>전제 복습 — 공권과 보호규범이론</h2>
+            <div class="formula">
+              공권(공법상 권리)이 인정되면 → 원고적격 인정
+              <span class="sub">공권 성립요건 = 강행법규성 + 사익보호성</span>
+            </div>
+            <p>관계법령이 행정청에 의무를 지우면서(<strong>강행법규성</strong>), 그 법 전체의 취지를 해석했을 때 특정 개인의 이익까지 보호하려는 것으로 읽혀야 한다(<strong>사익보호성</strong>).</p>
+            <p>이것이 <strong>보호규범이론(Schutznormtheorie)</strong>이며, 판례가 원고적격을 판단하는 기준이다. 오늘 수업 전체를 관통하는 전제이므로 먼저 잡아 둔다.</p>
+          </section>
+
+          <section id="s3">
+            <h2><span class="num">3</span>행정소송의 종류</h2>
+            <p class="lead">소송은 크게 주관소송과 객관소송으로 나뉜다.</p>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">주관소송</span><span class="badge plain">개인 권리구제</span></div>
+                <p><strong>항고소송</strong>과 <strong>당사자소송</strong>이 여기 속한다.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">객관소송</span><span class="badge plain">객관적 법질서 수호</span></div>
+                <p>개인 이익의 침해가 없어도 제기할 수 있다. <strong>민중소송</strong>과 <strong>기관소송</strong>이 여기 속한다.</p>
+              </div>
+            </div>
+            <h3>소의 형태</h3>
+            <ul class="tight">
+              <li><strong>형성의 소</strong> — 법률관계의 발생·변경·소멸을 구하는 소</li>
+              <li><strong>확인의 소</strong> — 법률관계의 존부 확인을 구하는 소</li>
+              <li><strong>이행의 소</strong> — 이행을 청구하는 소</li>
+            </ul>
+            <h3>'항고(抗告)'의 뜻</h3>
+            <p>항고는 <strong>불복</strong>이다. 힘센 자와 약한 자의 상하·우열관계를 전제하고, 아래에서 위로 치고 올라가는 소송 — 그래서 항고소송이다.</p>
+            <h3>당사자소송 — 대등한 당사자 사이의 공법상 법률관계 소송</h3>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">실질적 당사자소송</span></div>
+                <p>공법상 계약, 공법상 신분·지위에 관한 소송.</p>
+                <p>예: 공무원이 직권면직을 다투는 경우.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">형식적 당사자소송</span><span class="badge warn">대표 예</span></div>
+                <p><strong>토지보상법상 보상금증감청구소송</strong></p>
+                <ul>
+                  <li>갑의 토지, 토지수용위원회 재결 보상금은 <strong>15억</strong>. 갑은 적정 보상이 20억이라 생각해 증액소송을 제기 → 피고는 재결을 한 위원회가 아니라 <strong>사업시행자 A</strong>.</li>
+                  <li>반대로 A가 15억이 과하다며 감액소송 → 피고는 <strong>갑</strong>.</li>
+                  <li>실질 당사자는 재결청이지만, 형식상 서로를 피고로 싸우는 구조라 '형식적' 당사자소송이다.</li>
+                </ul>
+              </div>
+            </div>
+            <h3>객관소송 두 가지</h3>
+            <ul class="tight">
+              <li><strong>민중소송</strong> — 선거소송 등 <strong>법률이 정한 경우에만</strong> 가능하다.</li>
+              <li><strong>기관소송</strong> — 지방자치단체장과 지방의회의 대립. 의결이 월권·법령 위반·공익 침해라고 단체장이 재의를 요구하고, 의회가 2/3로 재의결하면 단체장이 대법원에 제소하는 구조다.</li>
+            </ul>
+            <div class="callout">
+              <span class="tag">공부 방향</span>
+              <p>행정소송의 중심은 <strong>취소소송</strong>이다. 나머지는 쟁점이 많지 않고, 공부는 <strong>소송요건</strong>을 중심으로 한다.</p>
+            </div>
+          </section>
+
+          <section id="s4">
+            <h2><span class="num">4</span>소송요건 개관</h2>
+            <p class="lead">취소소송의 소송요건은 여섯 가지다.</p>
+            <div class="toc" style="margin-top:10px;">
+              <span style="font-size:13.5px; padding:4px 6px;">원고적격</span>
+              <span style="font-size:13.5px; padding:4px 6px;">피고적격</span>
+              <span style="font-size:13.5px; padding:4px 6px;">대상적격</span>
+              <span style="font-size:13.5px; padding:4px 6px;">제소기간</span>
+              <span style="font-size:13.5px; padding:4px 6px;">관할법원</span>
+              <span style="font-size:13.5px; padding:4px 6px;">행정심판 전치</span>
+            </div>
+            <ul class="tight">
+              <li><strong>필요적 행정심판 전치</strong>의 예: 공무원 징계, 조세, 운전면허 관련 소송.</li>
+              <li>요건이 <strong>하나라도 빠지면</strong> 본안(처분의 위법 여부) 판단에 들어가지 않고 <strong>각하</strong>된다. 본안 판단은 이 '문턱'을 넘어야 시작된다.</li>
+            </ul>
+            <div class="callout">
+              <span class="tag">교수 강조</span>
+              <p>소송요건 같은 형식적 요건이 실무에서는 결정적이다.</p>
+            </div>
+          </section>
+
+          <section id="s5">
+            <h2><span class="num">5</span>행소법 12조 — '법률상 이익'이 두 번 나온다</h2>
+            <p>같은 문구가 두 번 나오지만 의미가 전혀 다르다. 헷갈리기 쉬운 지점이다.</p>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr><th>위치</th><th>의미</th><th>내용</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>전문(前文)</td>
+                    <td data-label="의미"><strong>원고적격</strong></td>
+                    <td data-label="내용">처분 등의 취소를 구할 법률상 이익이 있는 자가 제기할 수 있다 — 누가 소송을 제기할 수 있는가의 문제. 오늘 수업의 중심.</td>
+                  </tr>
+                  <tr>
+                    <td>후단</td>
+                    <td data-label="의미"><strong>협의의 소익(訴益)</strong></td>
+                    <td data-label="내용">처분의 효력이 소멸한 뒤에도 취소를 구할 이익이 있는가의 문제. 예: 영업정지 3개월 처분은 기간이 다 지나 효력이 소멸하면 원칙적으로 취소를 구할 이익이 없다. 다만 후단 단서상 같은 종류 처분의 반복 위험, 가중된 제재의 기초가 되는 경우 등은 예외다.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="flow-note">협의의 소익의 유형 상세는 다음 차시에서 따로 다룬다.</p>
+          </section>
+
+          <section id="s6">
+            <h2><span class="num">6</span>원고적격 — 전형 3사례로 구조 잡기</h2>
+            <p class="lead">전반부의 핵심. 세 사례를 나란히 놓고 보면 원고적격 문제가 어디서 생기는지 보인다.</p>
+            <div class="cards c3">
+              <div class="card">
+                <div class="card-head"><span class="letter-badge">A</span><span class="card-title">직접 상대방</span></div>
+                <p>유흥주점(단란주점) 운영자 <strong>갑</strong>. 미성년자 출입을 이유로 <strong>영업정지 3개월</strong> 처분을 받았다.</p>
+                <p>갑은 신분증 확인을 했다며 억울해 처분 취소소송을 제기한다.</p>
+                <p><span class="badge ok">원고적격 문제없음</span></p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="letter-badge">B</span><span class="card-title">경업자(競業者)</span></div>
+                <p>갑의 바로 옆에 <strong>을</strong>이 새로 유흥주점 허가를 받아 개업했고, 손님이 다 넘어갔다.</p>
+                <p>알고 보니 을의 허가는 소방·안전시설 등 <strong>허가 요건을 갖추지 못한 위법한 허가</strong>. 갑이 을에 대한 허가의 취소를 구한다.</p>
+                <p><span class="badge warn">갑은 제3자</span></p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="letter-badge">C</span><span class="card-title">경원자(競願者) 유형</span></div>
+                <p>주유소 운영자 <strong>병</strong>. 관계법령상 기존 주유소 <strong>1km 이내</strong>에는 신규 주유소 설치허가를 내줄 수 없다는 거리제한이 있다.</p>
+                <p>그런데도 <strong>정(丁)</strong>이 1km 안에 신규 허가를 받았고 병의 매출이 타격을 입었다. 병이 정에 대한 허가의 취소를 구한다.</p>
+                <p><span class="badge warn">병은 제3자</span></p>
+              </div>
+            </div>
+            <div class="callout">
+              <span class="tag">B·C의 공통점</span>
+              <p>원고가 처분의 직접 상대방이 아닌 <strong>제3자</strong>이고, 처분 상대방과 <strong>경쟁관계</strong>에 있다. 원고적격 문제는 결국 <strong>제3자 소송</strong>에서 발생한다.</p>
+            </div>
+          </section>
+
+          <section id="s7">
+            <h2><span class="num">7</span>직접 상대방 이론</h2>
+            <p><strong>아드레사텐테오리(Adressatentheorie, 수범자 이론)</strong> — 처분의 직접 상대방은 법률상 이익이 있는 것으로 본다. 그래서 직접 상대방에게는 원고적격을 문제 삼지 않는다.</p>
+            <ul class="tight">
+              <li>원고적격 판례의 <strong>90%</strong>는 제3자가 제기한 소송이다.</li>
+              <li>주의: 직접 상대방은 '법률상 이익이 <strong>필요 없다</strong>'는 뜻이 아니라, 법률상 이익이 '<strong>있는 것으로 봐준다</strong>'는 뜻이다.</li>
+            </ul>
+          </section>
+
+          <section id="s8">
+            <h2><span class="num">8</span>'법률상 이익'의 학설 4가지</h2>
+            <p class="lead">아래로 갈수록 원고적격이 넓어진다.</p>
+            <div class="theories">
+              <div class="theory">
+                <div class="t-head"><span class="t-num">1</span><span class="t-name">권리구제설</span></div>
+                <p>법률상 이익 = <strong>(공법상) 권리</strong>. 침해된 권리를 회복하려는 자만 원고적격이 있다.</p>
+                <p>단, 다수설·판례의 보호이익설이 강행법규성+사익보호성으로 권리를 정의하므로, 사실상 두 설의 귀결이 같아져 구별 실익이 퇴색했다.</p>
+                <div class="scope"><div class="scope-label">원고적격 범위</div><div class="bar"><i style="width:22%"></i></div></div>
+              </div>
+              <div class="theory">
+                <div class="t-head"><span class="t-num">2</span><span class="t-name">법률상 보호이익설</span><span class="badge ok">판례</span></div>
+                <p>관계법령의 취지가 특정인의 이익까지 보호하는 것으로 해석되면 법률상 이익을 인정한다. <strong>보호규범이론과 동일</strong>하다.</p>
+                <div class="scope"><div class="scope-label">원고적격 범위</div><div class="bar"><i style="width:45%"></i></div></div>
+              </div>
+              <div class="theory">
+                <div class="t-head"><span class="t-num">3</span><span class="t-name">소송상 이익설</span><span class="badge plain">교수 지지</span></div>
+                <p>실정법상 이익이 아니라 '<strong>소송으로 다툴 만한 이익</strong>'이면 인정한다.</p>
+                <p>소송을 제기하는 사람은 대개 억울함이 있으니, 문전박대(각하)하지 말고 본안으로 넘겨야 한다는 논거다.</p>
+                <div class="scope"><div class="scope-label">원고적격 범위</div><div class="bar"><i style="width:72%"></i></div></div>
+              </div>
+              <div class="theory">
+                <div class="t-head"><span class="t-num">4</span><span class="t-name">적법성보장설</span></div>
+                <p>취소소송의 목적은 행정의 적법성 통제라는 <strong>객관소송적 파악</strong>. 위법성을 다툴 이익이 있는 자면 누구나 가능해져 사실상 원고적격이 <strong>무제한</strong>이 된다.</p>
+                <p>문제: '정의의 수호자'식 소송 남발.</p>
+                <div class="scope"><div class="scope-label">원고적격 범위</div><div class="bar"><i style="width:100%"></i></div></div>
+              </div>
+            </div>
+            <p>판례는 2번(법률상 보호이익설)을 유지하면서도, 비판을 받아 조금씩 원고적격 범위를 넓혀 오는 중이다.</p>
+          </section>
+
+          <section id="s9">
+            <h2><span class="num">9</span>판례의 유형별 태도</h2>
+
+            <h3>(1) 경업자소송 — 강학상 '특허'냐 '허가'냐로 갈린다</h3>
+            <p>전제: 여기서의 허가·특허는 실정법 용어가 아니라 <strong>강학상 개념</strong>이다.</p>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr><th>구분</th><th>강학상 허가</th><th>강학상 특허</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>뜻</td><td data-label="강학상 허가">원래부터 할 수 있던 행위(자연적 자유)를 정책적으로 금지해 뒀다가, 요건을 갖추면 풀어주는 것</td><td data-label="강학상 특허">원래 할 수 없던 것을 특별히 할 수 있게 해 주는 것</td></tr>
+                  <tr><td>성격</td><td data-label="강학상 허가">자연적 자유의 회복</td><td data-label="강학상 특허">새로운 권리·독점적 지위의 설정</td></tr>
+                  <tr><td>행위 구분</td><td data-label="강학상 허가">기속행위 (요건에 해당하면 내줘야 함)</td><td data-label="강학상 특허">재량행위</td></tr>
+                  <tr><td>대표 예</td><td data-label="강학상 허가">석탄가공업 허가</td><td data-label="강학상 특허">버스운송사업 면허 (노선 독점 + 정해진 운행 의무)</td></tr>
+                  <tr><td>기존 업자의 원고적격</td><td data-label="강학상 허가"><span class="badge no">부정</span> 반사적 이익</td><td data-label="강학상 특허"><span class="badge ok">인정</span> 법률상 이익</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">버스운송사업 면허</span><span class="badge ok">인정</span></div>
+                <p>기존 버스운송사업자 갑이, 자기 노선과 거의 유사한 노선으로 을이 받은 면허의 취소를 구한 사안.</p>
+                <p>갑이 누리던 독점적 이익은 관계법(원활한 수송, 교통 발달 등)이 보호하려는 이익 → <strong>법률상 이익 인정</strong>.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">석탄가공업 허가</span><span class="badge no">부정</span></div>
+                <p>기존 석탄가공업자 갑이, 인근에 새로 진입한 을의 석탄가공업 허가 취소를 구한 사안.</p>
+                <p>갑이 경쟁자 없이 누리던 경제적 이익은 법이 독점적 이익을 보장한 게 아니라 <strong>허가제의 반사적 이익</strong>에 불과 → 법률상 이익 부정.</p>
+              </div>
+            </div>
+            <div class="callout">
+              <span class="tag">정리</span>
+              <p>강학상 <strong>특허</strong>로 누리는 이익은 법률상 이익으로 보호하고, 강학상 <strong>허가</strong>로 누리는 이익은 대체로 반사적 이익으로 부정한다.</p>
+            </div>
+
+            <h3>(2) 경원자소송 — 선정과 탈락이 갈리는 구조</h3>
+            <p><strong>경원관계</strong>: 여러 지원자 중 한 명을 선정하면 나머지는 탈락(거부)으로 귀결될 수밖에 없는 구조. 예컨대 갑·병·정이 지원하고 을만 선정되면, 탈락한 갑·병·정은 선정 처분의 취소를 구할 수 있는지가 문제 된다.</p>
+            <p>판례가 경원관계를 인정하는 전형은 두 가지다.</p>
+            <ul class="tight">
+              <li><strong>한정된 자원의 배분</strong> — 공유수면매립면허처럼 자원이 한정된 경우.</li>
+              <li><strong>거리제한 규정·업소수 제한 규정</strong>이 있는 경우 — 일정 반경 안에는 하나만 선정되므로 나머지는 불허로 귀결된다. (사례 C의 주유소 거리제한이 여기 해당한다.)</li>
+            </ul>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr><th>구분</th><th>경업관계</th><th>경원관계</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>구조</td><td data-label="경업관계">이미 영업 중인 기존 업자가 있는 데에 신규 진입자가 들어오는 <strong>시간적 선후</strong> 구조</td><td data-label="경원관계"><strong>동시 지원·경쟁</strong>에서 선정과 탈락이 갈리는 구조</td></tr>
+                  <tr><td>불이익의 원인</td><td data-label="경업관계">신규 진입 처분 그 자체</td><td data-label="경원관계">타인에 대한 선정 처분이 곧 나의 탈락으로 귀결</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card">
+              <div class="card-head"><span class="card-title">경원이 아닌 예 — 정부 AI 지원사업</span><span class="badge no">경원관계 아님</span></div>
+              <p>평가 <strong>80점 이상이면 모두 100억</strong>을 지원하는 사업. A·B만 선정되고 C·D가 탈락했어도, C·D의 탈락 원인은 <strong>자기 점수 미달</strong>이지 A·B의 선정이 아니다.</p>
+              <p>A·B에 대한 지원 처분이 C·D에게 불이익으로 '귀결'되는 구조가 아니므로 경원관계가 아니다.</p>
+            </div>
+
+            <h3>(3) 인인(隣人)소송 — 인근 주민의 원고적격</h3>
+            <p>인인소송은 이웃 '린(隣)' 자를 쓰는 소송으로, 혐오·기피시설의 설치를 다투는 인근 주민의 소송이다.</p>
+            <div class="cards">
+              <div class="card">
+                <div class="card-head"><span class="card-title">주거지역 연탄공장 건축허가</span><span class="badge ok">인정</span></div>
+                <p>관계법 취지가 주민의 건강·생활 이익까지 보호한다고 봐서 인근 주민의 원고적격을 인정했다. <strong>공설화장장 설치인가</strong>를 다투는 인근 주민도 같은 취급이다.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">상수원보호구역 변경</span><span class="badge no">부정</span></div>
+                <p>그 구역 물을 먹던 주민들이 변경 취소를 구했지만, 수도법에서는 주민의 건강·이익을 보호하려는 취지를 도출할 수 없어 원고적격을 부정했다 (당시 기준).</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">국립공원 시설지구 사업계획 변경</span><span class="badge warn">확장</span></div>
+                <p>관계법령을 직접 근거법령뿐 아니라 <strong>간접 관련 법령까지</strong> 넓게 살펴 주민 이익 보호 취지를 인정했다.</p>
+                <p>환경영향평가 대상지역 '<strong>안</strong>'의 주민에게 인정하고, 지역 '<strong>밖</strong>' 주민도 피해를 입증하면 인정할 수 있다는 선까지 나아갔다 — 판례가 인정 범위를 넓히려는 방향이다.</p>
+              </div>
+            </div>
+            <div class="callout">
+              <span class="tag">기준은 결국 보호규범이론</span>
+              <p>관계법령(직접 근거법령 + 간접 관련 법령)의 취지가 그 주민의 이익을 보호하는지가 관건이다. 2번 절의 전제로 다시 돌아온다.</p>
+            </div>
+          </section>
+
+          <div class="next-up">
+            <span class="tag">다음 시간 예고</span>
+            협의의 소익(訴益)의 유형 상세 — 처분의 효력이 소멸한 뒤에도 취소를 구할 이익이 인정되는 경우들을 다음 차시에서 따로 다룬다.
+          </div>
+
+          <footer>수업 녹음 전사 + 강의자료 슬라이드 (8) 대조 정리</footer>
+        </article>
+
+        <!-- ================= 2026-11-10 (정정본) ================= -->
+        <article data-panel="w1110">
+          <div class="session-head">
+            <p class="date">2026-11-10 수업 (11주차)</p>
+            <p class="topic">소송요건 심화 — 원고적격 · 소의 이익 · 피고적격 · 대상적격 · 처분성</p>
+            <p class="meta">복습: 강의자료 (8) · 본수업: 강의자료 (9) — 메모 앱 필기(11주차 11/10) 대조 정정본</p>
+          </div>
+
+          <div class="toc" aria-label="이 차시 목차">
+            <a href="#m1">복습 — 소송의 종류·원고적격 개관</a>
+            <a href="#m2">원고적격 ① 사례 4</a>
+            <a href="#m3">원고적격 ② 법률상 이익 판단</a>
+            <a href="#m4">소의 이익 ① 12조 후단</a>
+            <a href="#m5">소의 이익 ② 협의의 소익</a>
+            <a href="#m6">피고적격 — 13조</a>
+            <a href="#m7">대상적격 ① 처분의 개념</a>
+            <a href="#m8">대상적격 ② 처분의 구체적 내용</a>
+            <a href="#m9">대상적격 ③ 처분성의 개별 판단</a>
+          </div>
+
+          <section id="m1">
+            <h2><span class="num">1</span>복습 — 소송의 종류와 원고적격 개관 (행시권(8) 복습)</h2>
+            <ul class="tight">
+              <li><strong>항고</strong> — '항거'라고 생각해라. 상하관계를 전제하고, 밑에서 위로 불복한다.</li>
+              <li><strong>당사자소송</strong> — 양 당사자가 대등한 관계에서 다툰다.</li>
+            </ul>
+            <h3>토지보상법에서의 특이한 유형 — 형식적 당사자소송의 예</h3>
+            <p>보상금의 증감을 다투는 소송이다. 보상금의 증액은 토지를 수용당하는 사람, 보상금은 사업시행자(토지보상법의 사업시행자 — 공익사업을 인정받은 사업시행자)가 지급한다. 양 당사자 간 합의가 이루어지지 않으면 관할토지수용위원회에서 판단한다.</p>
+            <p>다투는 것은 사실상 위원회의 재결이고, 이에 불복하는 것은 사실상 항고소송이다. <strong>형식만 당사자소송이지 실질은 항고소송</strong>이다. 관할토지수용위원회는 다툼에서 빠진다 (과거에는 위원회를 끌고 들어왔다 — 필요적 공동소송).</p>
+            <div class="callout">
+              <span class="tag">취소소송의 소송요건</span>
+              <p>원고적격 (행소법 12조) — 법률상 이익. <strong>1문과 2문의 법률상 이익은 다르게 보아야 한다.</strong></p>
+            </div>
+          </section>
+
+          <section id="m2">
+            <h2><span class="num">2</span>원고적격 ① 직접상대방과 제3자 소송의 유형 (사례 4)</h2>
+            <div class="cards">
+              <div class="card">
+                <div class="card-head"><span class="card-title">직접상대방</span></div>
+                <p>유흥주점을 운영하다가 허가취소를 당한 사람 — 허가취소처분의 취소를 구하는 소송을 제기한다.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">경업자소송 · 허가</span></div>
+                <p>요건을 전혀 갖추지 못했음에도 유흥주점 허가 처분을 받음(황제와 황비홍). 옆에서 영업하던 사람 피해가 심함. 위법한 허가의 취소를 구하는 소송을 제기 — <strong>제3자</strong>.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">거리제한 (경쟁자소송)</span></div>
+                <p>주유소 — 범위 내에 새로운 경쟁 주유소가 들어온다.</p>
+              </div>
+            </div>
+            <ul class="tight">
+              <li><strong>수범자이론 · 처분의 직접상대방이론</strong> — 처분의 직접상대방이기 때문에 법률상 이익은 당연히 있는 것으로 본다. 법률상 이익이 필요없다는 것이 아니다.</li>
+              <li>원고적격이 문제가 되는 경우는 거의 <strong>제3자</strong>이다.</li>
+              <li>법률상 이익 학설 (항목 6) — 원고적격 인정의 범위가 점점 넓어지고 있다.</li>
+            </ul>
+          </section>
+
+          <section id="m3">
+            <h2><span class="num">3</span>원고적격 ② 법률상 이익의 판단 — 특허와 허가, 관계법령 (항목 7·10·11)</h2>
+            <h3>경업자 소송 (항목 7)</h3>
+            <p>제3자가 다툰다고 했을 때, 그 자가 누리고 있던 운영상의 이익이 <strong>특허</strong>에 의한 것이냐 <strong>강학상 허가</strong>에 의한 것이냐에 따라 법원은 다르게 본다.</p>
+            <div class="cards c2">
+              <div class="card">
+                <div class="card-head"><span class="card-title">강학상 허가</span></div>
+                <p>자연적 자유권을 회복시켜주는 행위. 원래부터 할 수 있는 행위, 요건을 갖춰서 신청하면 허가 해주어야 하는 행위(기속행위).</p>
+                <p>허가제로 인해 누리고 있던 이익은 <strong>반사적 이익, 사실상의 이익</strong>에 불과하다 (법률상 이익 아님).</p>
+                <p class="flow-note">실정법에서의 허가가 강학상 의미와 같은지는 확인해 봐야 한다.</p>
+              </div>
+              <div class="card">
+                <div class="card-head"><span class="card-title">특허</span></div>
+                <p>이와 다르게 본다.</p>
+              </div>
+            </div>
+            <div class="callout">
+              <span class="tag">교수 표현</span>
+              <p>"식품위생법이 당신이 지역에서 유흥주점을 하며 독점적 이익을 누리기 위해 있는 것이 아니야."</p>
+            </div>
+            <h3>경원자 소송 · 인인소송</h3>
+            <ul class="tight">
+              <li><strong>경원자 소송</strong> — 경원관계(판례). 일방에 대한 허가가 타방 당사자들에 대해 불허가로 귀결될 수밖에 없는 위치의 사람. 법원이 특별한 지위로 봐준다 — 다퉈봐라.</li>
+              <li><strong>인인소송</strong> — 이웃소송. 각각의 경우에 다 다르다.</li>
+            </ul>
+            <h3>항목 10 · 항목 11 — 유흥주점 사례로 정리</h3>
+            <ul class="tight">
+              <li><strong>항목 10</strong> — 환경영향평가 대상지역 밖의 주민은 피해를 입증한다면 법률상 이익이 인정되지 않는 것은 아니다.</li>
+              <li><strong>처분의 직접상대방</strong> — 당연 인정.</li>
+              <li><strong>경원자</strong> — 인정되지 않음. 식품위생법의 목적상 유흥주점 운영하는 자를 보호하려는 의도가 없다. 위법한 허가를 받아서 기존 유흥주점 운영에 손해가 생겨도 법률상 이익이 인정되지 않음. "100% 이기고 지는 것은 없다 대체로 그렇다(판례)."</li>
+              <li><strong>거리제한 규정</strong> — 관계법령을 봐라. 주유소 예시 — 석유사업법, 공익성 인정됨. 사업자들의 과다한 경쟁을 방지하여 사업의 종합적인 발전을 도모(판례).</li>
+              <li><strong>담배소매인</strong> — 담배사업법에서 아무나 못하게 함. 전과 있는 사람 못하게 정함. 지역에 따라 거리제한규정을 둠.</li>
+            </ul>
+          </section>
+
+          <section id="m4">
+            <h2><span class="num">4</span>소의 이익 ① 행소법 12조 후단 — '이익 없이 소 없다' (항목 12)</h2>
+            <div class="callout">
+              <span class="tag">행소법 12조 후단</span>
+              <p>처분등의 효력이 기간의 경과, 처분등의 집행 그 밖의 사유로 인하여 소멸된 뒤에도 그 처분등의 취소로 인하여 회복되는 법률상 이익이 있는 자의 경우에는 또한 같다(제기할 수 있다). 소멸된 뒤라면 원칙은 제기할 수 없다.</p>
+            </div>
+            <p>교수의 설명 — <strong>"쓸데없는 소송을 하지 마세요"</strong>의 의미. 소송을 제기했는데, 소송에서 이겼는데도 얻어갈 수 있는 이익이 없다면 소송하지 마세요. 법원은 바쁩니다.</p>
+            <h3>사례 — 국공립 고교생 갑</h3>
+            <p>학내시위를 주도하여 퇴학처분. 이후 검정고시에 합격하여 대학 진학함 — 이미 대학생임. 위법한 처분이라는 생각에 소송으로 다투고자, 퇴학처분 취소소송 → <strong>각하</strong>(원칙은 소의 이익이 없다).</p>
+            <p>뭔가 다른 이유가 있다면 소의 이익이 있을 수도. 고교생으로 돌아가고자 하는 것은 아니지만 "나도 명예가 있다 — 명예를 되찾고 싶다(퇴학처분이 잘못되었음을 밝혀서)" → 소의 이익?</p>
+            <h3>사례 — 모범적인 개인택시기사 을</h3>
+            <p>승차거부를 누가 신고해서 15일간 운행정지 처분을 받음. 행정규칙에서 위반횟수에 따라 가중처벌하도록 규정 — 동일한 사유로 일정 기간 내에 두 번째 걸리면 가중처벌하도록. 이후 불이익이 있을 수 있으니까 → 소의 이익?</p>
+          </section>
+
+          <section id="m5">
+            <h2><span class="num">5</span>소의 이익 ② 협의의 소의 이익과 효력 소멸 후의 소익 (항목 13~16)</h2>
+            <h3>항목 13 — 협의의 소의 이익</h3>
+            <p>행소법 12조 후단의 법률상 이익은 12조 1문의 법률상 이익과 달리 취급할 필요가 있다. 더 넓게 볼 여지가 있다. <strong>명예, 신용 포함.</strong></p>
+            <h3>항목 14 — 처분의 효력 소멸</h3>
+            <p>영업정지, 면허정지기간 도과 후 그 효력이 소멸된 경우 취소를 구할 이익이 없다(대법원 판례) — 원칙.</p>
+            <ul class="tight">
+              <li><strong>제재적 처분이 가중요건인 경우</strong> — 가중요건이 법률형식으로 규정된 경우는 소의 이익을 인정. 건축사법, 건축사 등록취소처분. "혹시 모르잖아, 지금 다투고 싶어요."</li>
+              <li><strong>가중요건이 법규명령형식의 행정규칙(시행규칙-부령)으로 규정된 경우</strong> — 행정규칙은 대외적 구속력이 없다. 법원에 대해서도 구속력이 없다. 공무원에게 가장 중요한 의무는 법령준수의무 — 법률뿐만 아니라 규범에 해당하는 행정규칙에 따라야 할 의무가 있다. 소익 부정 [대판 1995. 10. 27, 94누14148] → <strong>판례변경: 2003두1684 영업정지처분취소 (소익 인정)</strong>. 단, 오해하지마 — 시행규칙에 법규범성을 인정한 것 아님(대외적 구속력 인정한 것 아님).</li>
+            </ul>
+            <h3>항목 15 — 사정으로 이익침해가 해소된 경우 등</h3>
+            <ul class="tight">
+              <li>불법건축물 철거명령에 대한 취소소송 제기 후 당해 건물이 철거된 경우 — 소익 없음. 철거명령을 다투는 소송은 쓸데없는 것. 국가배상을 청구하는 것이 낫다. 반대의 사안 — 건축물이 완공된 경우, 이격거리 확보의 단계가 이미 지남.</li>
+              <li>처분 후 사정(변경)으로 인해 이익침해가 해소된 경우 — 사법시험 1차 불합격 후 새로 실시된 1차시험에 합격하면 더 이상 불합격처분 취소 이익 없음. 소의 이익 없음, 각하.</li>
+              <li><strong>오늘날의 경향</strong> — 점점 나간다. 지금 이익침해는 없지만 확실하게 보장받고 싶고, 불분명한 법률문제를 확실히 짚고 넘어가고 싶어 하는 경우까지 인정하는 흐름. 유사한 사안의 혼란 방지, 심지어 장차 같은 상황에 처해질 다른 사람을 위해서까지 봐주더라.</li>
+            </ul>
+            <h3>항목 16 — 고교 퇴학처분 취소를 다투는 경우</h3>
+            <p>이미 대학생이지만, 명예를 회복하기 위해서 (판례). 다툼만한 시기는 지났지만 다툼만한 이익이 있다. 협의의 소의 이익에 있어서는 굉장히 획기적인 사안. 오로지 명예만을 위한 것이라면 보통의 경우 소의 이익을 인정하지 않음.</p>
+          </section>
+
+          <section id="m6">
+            <h2><span class="num">6</span>피고적격 (행시권(9)) — 행소법 13조</h2>
+            <div class="callout">
+              <span class="tag">행소법 제13조(피고적격) ①</span>
+              <p>취소소송은 다른 법률에 특별한 규정이 없는 한 그 처분등을 행한 행정청을 피고로 한다. 다만, 처분등이 있은 뒤에 그 처분등에 관계되는 권한이 다른 행정청에 승계된 때에는 이를 승계한 행정청을 피고로 한다.</p>
+            </div>
+            <ul class="tight">
+              <li>행정주체와 행정청은 다르다. 비유컨대, 행정주체는 몸통, 행정청은 수족, 눈코입. 일정한 행위의 법적인 효과가 최종적으로 귀속되는 자 — 행정주체: 국가, 지방자치단체, 공공단체.</li>
+              <li>왜 행정주체가 아니라 행정청을 상대로 싸우게 두었을까 — 특별한 규정이다 (원칙적인 모습은 국가배상청구소송에서 국가와 지자체를 피고로 두는 것과 같은 경우).</li>
+              <li><strong>항목 3</strong> — 국민의 입장에서 누구를 싸움터로 데려갈지 잘 모른다. 우리 법원은 잘못 선택하면 각하하지만, 처분 명의가 아무리 잘못되어있었더라도 처분서에 그렇게 쓰여 있으면 그를 피고로 소를 제기해도 된다 — 국민에 유리.</li>
+            </ul>
+          </section>
+
+          <section id="m7">
+            <h2><span class="num">7</span>대상적격 ① 처분의 개념 (행시권(9)) — 행소법 2조·19조</h2>
+            <div class="callout">
+              <span class="tag">행소법 제2조 제1항</span>
+              <p>"처분등"이라 함은 행정청이 행하는 구체적 사실에 관한 법집행으로서의 공권력의 행사 또는 그 거부와 그 밖에 이에 준하는 행정작용(이하 "처분"이라 한다) 및 행정심판에 대한 재결을 말한다.</p>
+            </div>
+            <p>넓게 정의하려고 노력했다. 다툼의 대상을 더 넓게 — 국민의 입장에서 유리.</p>
+            <div class="callout">
+              <span class="tag">제19조(취소소송의 대상)</span>
+              <p>취소소송은 처분등을 대상으로 한다. 다만, 재결취소소송의 경우에는 재결 자체에 고유한 위법이 있음을 이유로 하는 경우에 한한다.</p>
+            </div>
+            <h3>항목 4 — 처분, 학설</h3>
+            <ul class="tight">
+              <li>행소법상 처분의 개념과 강학상의 행정행위.</li>
+              <li><strong>실체법적 처분개념설(일원설)</strong> / <strong>쟁송법적 처분개념설(이원설)</strong>.</li>
+              <li>입법취지 — 다양한 행정의 작용형식에 대비, 항고소송의 대상확대. 국민의 권리구제에 충실.</li>
+            </ul>
+            <h3>항목 5 — 판례의 입장</h3>
+            <p>우리 판례는 딱 이 입장이다 이렇게 이야기하는 경우는 거의 드물다. 기본적으로는 일원설에 입각해서 엄격하게 이야기 — "행정처분은 공법상의 행위로서 특정 사항에 대하여 법규에 의한 권리의 설정 또는 의무의 부담을 명하거나 기타 법률상 효과를 발생하게 하는 등 국민의 권리의무에 직접 관계가 있는 행위를 가리키는 것".</p>
+            <p>그러나 쟁송법상 처분개념에 가까운 판례도 있고, 개별적으로 결정하여야 한다. 국민의 불이익 내지 불안함(불이익)을 고려하여 판단하여야. 지금의 입장은 쟁송법상 처분개념설에 가까워보임.</p>
+          </section>
+
+          <section id="m8">
+            <h2><span class="num">8</span>대상적격 ② 처분의 구체적 내용 (항목 6)</h2>
+            <ul class="tight">
+              <li><strong>행정청의 행정작용.</strong></li>
+              <li><strong>구체적 사실에 관한 법집행</strong> — 일반, 추상적 행위는 처분이 아님. 법규명령, 행정규칙은 안 됨. 예외: 두밀분교폐교조례. 행정계획: 앞으로 뭘 하자, 바뀔 수 있음(언제든지 변경될 가능성이 내포되어 있음) — 개별 구체적인 때 예외. 일반처분.</li>
+              <li><strong>공권력의 행사, 그 거부</strong> — 우월성, 일방성. 비권력적 행위는 처분이 아님. 공법상 계약, 행정재산의 매각행위는 처분이 아님.</li>
+              <li><strong>거부</strong>가 거부처분으로 인정받기 위해서는 전제 — 법규상, 조리상의 신청권이 있어야 한다. 신청권 있는지 없는지 판단하는 방법: 판례는 명시적 규정이 없어도 조리상 신청권이 있는 것으로 해석이 되면 신청권이 있는 것으로 인정. 이때 신청하고 거부당하면 처분.</li>
+              <li><strong>그 밖에 이에 준하는 행정작용</strong> → 학설과 판례에 맡기겠다. 행정지도(권고가 그 예시): 생활물가를 잡기 위해 필수재 가격 인상하지 않을 것을 권고 — 강제성이 느껴지는 경우? 응하지 않으면 불이익이 예상됨.</li>
+            </ul>
+          </section>
+
+          <section id="m9">
+            <h2><span class="num">9</span>대상적격 ③ 처분성의 개별 판단 — 사실행위·내부행위·중간행위·반복된 행위 (항목 7~)</h2>
+            <h3>사실행위</h3>
+            <ul class="tight">
+              <li>권력적 사실행위는 처분성 인정. 비권력적 사실행위 처분성 부인.</li>
+              <li><strong>건축물에 대한 단전 요청행위</strong> — 단수, 단전요청하는 규정을 삭제. 안전을 위해 시설개선명령을 내렸는데 이에 따르지 않아서 수도, 전기 끊어버리는 것을 행정이 요청. 부당결부금지 원칙에 위반되는 규정이 입법되어있었음, 삭제함. 세금과 관련된 아직 남아있음.</li>
+            </ul>
+            <h3>내부행위</h3>
+            <p>행정기관내부행위. 행정기관 상호간의 행위(협의, 동의) — 판례는 처분성 부인.</p>
+            <h3>중간행위</h3>
+            <p>원자로시설부지 사전승인 — 최종적인 단계의 일부(일종의 부분허가)로 볼 수가 있음, 다음 단계로 넘어갈 수 있게 함. 중간행위이긴 하지만 일부 할 수 있는 법적인 효과를 가져오는 것이어서 최종행위는 아니지만 다툴 수 있게 해야겠다(처분성을 인정).</p>
+            <p>공시지가(나라에서 땅값을 정해서 알려주는 것에 불과) — 그러나 나중에 세금 산정 혹은 수용 가격 결정의 근거가 된다. 나중에 다투면 제소기간 도과됨, 처분성을 인정하여 다툴 수 있게 해야. 개별공시지가에 대해서만 인정하다가 나중에는 표준공시지가에 대해서도 처분성 인정.</p>
+            <h3>반복된 행위</h3>
+            <p><strong>예) 계고처분</strong> — 큰 집을 소유하고 있는 갑, 주택 뒤에 작은 창고를 지었다. 관할 행정청에서 불법건축물 철거하라고 명령. 갑은 깜짝놀람 — 항공사진 대조하는 담당공무원 인정도는 괜찮겠지 하고 갑은 해체명령에 불응, 버텼음. 행정청은 1, 2, 3차 계고서 발송행위함. 계산해보니까 1, 2차 계고 처분 90일 지남, 불가쟁력 발생. 3차 계고처분은 쟁송기간 내에 있음 — 계고처분의 취소를 구하는 소를 제기한 경우.</p>
+            <p>판례 입장 — 독립적으로 행해진 것처럼 보이나, 2, 3차는 후속 처분을 늦춰줬다는 것에 불과, 다투려면 1차 계고처분을 다퉜어야 한다, 더이상 다툴 수 없다. 행정대집행법에서 정하고 있는 4단계: 계고 - 통지 - 실행 - 비용징수.</p>
+            <p><strong>예) 허가거부의 반복</strong> — 허가가 필요한 사업을 시작하려는 을. 허가를 신청했으나 거부당함. 을은 다시 신청(크게 내용적으로 바뀐 것이 오버랩) — 2차 거부. 최종적인 목적은 허가를 받아내는 것. 그냥 또 신청하면 같은 내용으로 신청을 하면 담당공무원은 지금 장난하세요. 허가거부처분이 당연히 예상됨 — 동일한 내용이 반복되는 경우는 어떻게 될까.</p>
+            <div class="next-up">
+              <span class="tag">수업 종료</span>
+              동일한 내용이 반복되는 경우는 어떻게 될까 — <strong>다음 시간에 알아봅시다</strong> (수업 종료).
+            </div>
+          </section>
+
+          <footer>이 차시는 메모 앱 필기(11주차 11/10)와 필기가 지목한 강의자료 (8)·(9)를 대조해 만든 정정본이다. 앞서 같은 날짜로 올라갔던 슬라이드 (10) 기준 차시(처분사유의 추가·변경·집행정지)는 오늘 수업에서 다루지 않은 내용이라 이 차시로 교체했다. 녹음 전사는 아직 반영되지 않았다.</footer>
+        </article>
+</main>
+    </div>
+
+    <script>
+      // 차시 선택: 패널 전환 (현재 차시 1개, 이후 차시는 버튼과 패널을 같은 data-week 값으로 추가)
+      (function () {
+        var buttons = document.querySelectorAll(".week-btn");
+        buttons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            buttons.forEach(function (b) { b.setAttribute("aria-selected", "false"); });
+            btn.setAttribute("aria-selected", "true");
+            var key = btn.getAttribute("data-week");
+            document.querySelectorAll("[data-panel]").forEach(function (panel) {
+              panel.classList.toggle("hidden", panel.getAttribute("data-panel") !== key);
+            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
