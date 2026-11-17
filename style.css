@@ -90,6 +90,20 @@ nav a:hover { color: var(--navy); }
   background: #eef4ff; color: var(--accent);
 }
 .badge.idea { background: #fff4e0; color: #b07900; }
+/* 사이드 프로젝트: 본 프로젝트 뒤에, 카드보다 가볍게 */
+.section.side { padding: 56px 0; }
+.section.side h2 { font-size: 1.3rem; }
+.side-item {
+  border-top: 1px solid var(--border); padding: 20px 0 4px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.side-item h3 { font-size: 1.02rem; color: var(--navy); }
+.side-item p { color: var(--muted); font-size: 0.93rem; }
+.side-item .result { color: var(--navy); font-weight: 600; font-size: 0.9rem; }
+.side-item .tags { margin-top: 0; }
+.card-link { align-self: flex-start; color: var(--accent); font-weight: 600; font-size: 0.92rem; text-decoration: none; }
+.card-link:hover { text-decoration: underline; }
+.section:not(.alt) + .section:not(.alt) { border-top: 1px solid var(--border); }
 
 /* 연락 */
 .contact-links a {
